@@ -1,0 +1,69 @@
+# App4Crawl
+
+A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
+
+## What it does
+
+App4Crawl puts the full feature set of [Crawl4AI](https://github.com/unclecode/crawl4ai)
+behind a clean, minimal native macOS interface. No command line, no manual config
+files, no Python knowledge required — the app manages its own Python environment and
+exposes crawling, content filtering, and LLM extraction through a visual UI.
+
+## Requirements
+
+- macOS 14 (Sonoma) or later
+- Python 3.10+ (the app can guide installation via Homebrew or python.org)
+- Internet connection for the first-launch install of Crawl4AI + Chromium
+
+## Installation
+
+Download the latest `.dmg` from the releases page, drag **App4Crawl** to your
+Applications folder, and launch it. On first launch the app walks you through
+installing the Crawl4AI environment (see the in-app onboarding flow).
+
+## Building from source
+
+```bash
+git clone https://github.com/johnjanney/app4crawl.git
+cd app4crawl
+open App4Crawl.xcodeproj
+```
+
+Build and run the `App4Crawl` scheme in Xcode (macOS 14+ deployment target,
+Swift 5.9+). The Python backend lives in `server/` and is launched automatically
+by the app as a subprocess; to run it standalone for development:
+
+```bash
+cd server
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --host 127.0.0.1 --port 8000
+```
+
+## Architecture overview
+
+```
+App4Crawl.app (SwiftUI)
+    ↕ localhost HTTP (127.0.0.1:PORT, dynamic)
+app4crawl-server (FastAPI, Python)
+    ↕
+Crawl4AI (pip package, managed venv)
+    ↕
+Playwright + Chromium (managed by Crawl4AI)
+```
+
+The SwiftUI app launches the FastAPI server as a subprocess on a dynamically
+chosen local port, communicates over `127.0.0.1` with JSON and Server-Sent
+Events, and shuts the server down cleanly on quit. See `PROJECTBRIEF.md` for the
+full architecture and design rationale.
+
+## Contributing
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/)
+and [Semantic Versioning](https://semver.org/). Development happens on the
+`develop` branch; `main` holds tagged releases only. Open questions and pending
+design decisions are tracked in `OPENQUESTIONS.md`.
+
+## License
+
+To be determined. See `OPENQUESTIONS.md`.

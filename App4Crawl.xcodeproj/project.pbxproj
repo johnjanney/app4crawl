@@ -1,0 +1,334 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1C0000000000000000000001 /* App4CrawlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000001 /* App4CrawlApp.swift */; };
+		1C0000000000000000000002 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000002 /* OnboardingView.swift */; };
+		1C0000000000000000000003 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000003 /* MainView.swift */; };
+		1C0000000000000000000004 /* CrawlConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000004 /* CrawlConfigView.swift */; };
+		1C0000000000000000000005 /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000005 /* ResultView.swift */; };
+		1C0000000000000000000006 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000006 /* HistoryView.swift */; };
+		1C0000000000000000000007 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000007 /* SettingsView.swift */; };
+		1C0000000000000000000008 /* CrawlJob.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000008 /* CrawlJob.swift */; };
+		1C0000000000000000000009 /* CrawlConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000009 /* CrawlConfig.swift */; };
+		1C000000000000000000000A /* LLMProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000A /* LLMProvider.swift */; };
+		1C000000000000000000000B /* ServerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000B /* ServerManager.swift */; };
+		1C000000000000000000000C /* CrawlAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000C /* CrawlAPIClient.swift */; };
+		1C000000000000000000000D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000D /* KeychainService.swift */; };
+		1C000000000000000000000E /* EnvironmentChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000E /* EnvironmentChecker.swift */; };
+		1D0000000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0000000000000000000001 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A000000000000000000000A /* App4Crawl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App4Crawl.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1A0000000000000000000014 /* App4Crawl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = App4Crawl.entitlements; sourceTree = "<group>"; };
+		1B0000000000000000000001 /* App4CrawlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App4CrawlApp.swift; sourceTree = "<group>"; };
+		1B0000000000000000000002 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000003 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000004 /* CrawlConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlConfigView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000005 /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000006 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000007 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000008 /* CrawlJob.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlJob.swift; sourceTree = "<group>"; };
+		1B0000000000000000000009 /* CrawlConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlConfig.swift; sourceTree = "<group>"; };
+		1B000000000000000000000A /* LLMProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMProvider.swift; sourceTree = "<group>"; };
+		1B000000000000000000000B /* ServerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerManager.swift; sourceTree = "<group>"; };
+		1B000000000000000000000C /* CrawlAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlAPIClient.swift; sourceTree = "<group>"; };
+		1B000000000000000000000D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
+		1B000000000000000000000E /* EnvironmentChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentChecker.swift; sourceTree = "<group>"; };
+		1D0000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A000000000000000000000C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A0000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				1A0000000000000000000004 /* App4Crawl */,
+				1A0000000000000000000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A000000000000000000000A /* App4Crawl.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000004 /* App4Crawl */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000001 /* App4CrawlApp.swift */,
+				1A0000000000000000000005 /* Views */,
+				1A0000000000000000000006 /* Models */,
+				1A0000000000000000000007 /* Services */,
+				1A0000000000000000000008 /* Resources */,
+				1A0000000000000000000014 /* App4Crawl.entitlements */,
+			);
+			path = App4Crawl;
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000005 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000002 /* OnboardingView.swift */,
+				1B0000000000000000000003 /* MainView.swift */,
+				1B0000000000000000000004 /* CrawlConfigView.swift */,
+				1B0000000000000000000005 /* ResultView.swift */,
+				1B0000000000000000000006 /* HistoryView.swift */,
+				1B0000000000000000000007 /* SettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000006 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000008 /* CrawlJob.swift */,
+				1B0000000000000000000009 /* CrawlConfig.swift */,
+				1B000000000000000000000A /* LLMProvider.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000007 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1B000000000000000000000B /* ServerManager.swift */,
+				1B000000000000000000000C /* CrawlAPIClient.swift */,
+				1B000000000000000000000D /* KeychainService.swift */,
+				1B000000000000000000000E /* EnvironmentChecker.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		1A0000000000000000000008 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1D0000000000000000000001 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A0000000000000000000009 /* App4Crawl */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A000000000000000000000F /* Build configuration list for PBXNativeTarget "App4Crawl" */;
+			buildPhases = (
+				1A000000000000000000000B /* Sources */,
+				1A000000000000000000000C /* Frameworks */,
+				1A000000000000000000000D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = App4Crawl;
+			productName = App4Crawl;
+			productReference = 1A000000000000000000000A /* App4Crawl.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A0000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1A0000000000000000000009 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 1A000000000000000000000E /* Build configuration list for PBXProject "App4Crawl" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1A0000000000000000000002;
+			productRefGroup = 1A0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A0000000000000000000009 /* App4Crawl */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A000000000000000000000D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1D0000000000000000000002 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A000000000000000000000B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C0000000000000000000001 /* App4CrawlApp.swift in Sources */,
+				1C0000000000000000000002 /* OnboardingView.swift in Sources */,
+				1C0000000000000000000003 /* MainView.swift in Sources */,
+				1C0000000000000000000004 /* CrawlConfigView.swift in Sources */,
+				1C0000000000000000000005 /* ResultView.swift in Sources */,
+				1C0000000000000000000006 /* HistoryView.swift in Sources */,
+				1C0000000000000000000007 /* SettingsView.swift in Sources */,
+				1C0000000000000000000008 /* CrawlJob.swift in Sources */,
+				1C0000000000000000000009 /* CrawlConfig.swift in Sources */,
+				1C000000000000000000000A /* LLMProvider.swift in Sources */,
+				1C000000000000000000000B /* ServerManager.swift in Sources */,
+				1C000000000000000000000C /* CrawlAPIClient.swift in Sources */,
+				1C000000000000000000000D /* KeychainService.swift in Sources */,
+				1C000000000000000000000E /* EnvironmentChecker.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1A0000000000000000000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1A0000000000000000000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		1A0000000000000000000012 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App4Crawl/App4Crawl.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.app4crawl.App4Crawl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1A0000000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = App4Crawl/App4Crawl.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.app4crawl.App4Crawl;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A000000000000000000000E /* Build configuration list for PBXProject "App4Crawl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A0000000000000000000010 /* Debug */,
+				1A0000000000000000000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A000000000000000000000F /* Build configuration list for PBXNativeTarget "App4Crawl" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A0000000000000000000012 /* Debug */,
+				1A0000000000000000000013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1A0000000000000000000001 /* Project object */;
+}
