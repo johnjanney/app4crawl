@@ -21,6 +21,8 @@
 		1C000000000000000000000C /* CrawlAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000C /* CrawlAPIClient.swift */; };
 		1C000000000000000000000D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000D /* KeychainService.swift */; };
 		1C000000000000000000000E /* EnvironmentChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000E /* EnvironmentChecker.swift */; };
+		1C000000000000000000000F /* AppPaths.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000000F /* AppPaths.swift */; };
+		1C0000000000000000000010 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000010 /* ProcessRunner.swift */; };
 		1D0000000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0000000000000000000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +43,8 @@
 		1B000000000000000000000C /* CrawlAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlAPIClient.swift; sourceTree = "<group>"; };
 		1B000000000000000000000D /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		1B000000000000000000000E /* EnvironmentChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentChecker.swift; sourceTree = "<group>"; };
+		1B000000000000000000000F /* AppPaths.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPaths.swift; sourceTree = "<group>"; };
+		1B0000000000000000000010 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
 		1D0000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,6 +118,8 @@
 				1B000000000000000000000C /* CrawlAPIClient.swift */,
 				1B000000000000000000000D /* KeychainService.swift */,
 				1B000000000000000000000E /* EnvironmentChecker.swift */,
+				1B000000000000000000000F /* AppPaths.swift */,
+				1B0000000000000000000010 /* ProcessRunner.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -209,6 +215,8 @@
 				1C000000000000000000000C /* CrawlAPIClient.swift in Sources */,
 				1C000000000000000000000D /* KeychainService.swift in Sources */,
 				1C000000000000000000000E /* EnvironmentChecker.swift in Sources */,
+				1C000000000000000000000F /* AppPaths.swift in Sources */,
+				1C0000000000000000000010 /* ProcessRunner.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
