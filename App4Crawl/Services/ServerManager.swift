@@ -22,6 +22,9 @@ final class ServerManager: ObservableObject {
     /// The most recent error message, if a start attempt failed.
     @Published private(set) var lastError: String?
 
+    /// Version reported by the running backend's /health (for verifying deploys).
+    @Published private(set) var serverVersion: String?
+
     private var process: Process?
 
     /// Base URL of the running backend, e.g. `http://127.0.0.1:<port>`.
@@ -110,6 +113,7 @@ final class ServerManager: ObservableObject {
         process = nil
         isRunning = false
         port = nil
+        serverVersion = nil
     }
 
     /// Locates the FastAPI server code bundled inside the app.
@@ -175,9 +179,12 @@ final class ServerManager: ObservableObject {
         while Date() < deadline {
             var request = URLRequest(url: healthURL)
             request.timeoutInterval = 2
-            if let (_, response) = try? await URLSession.shared.data(for: request),
+            if let (data, response) = try? await URLSession.shared.data(for: request),
                let http = response as? HTTPURLResponse,
                http.statusCode == 200 {
+                if let health = try? JSONDecoder.app().decode(HealthResponseDTO.self, from: data) {
+                    serverVersion = health.appVersion
+                }
                 return true
             }
             try? await Task.sleep(nanoseconds: 300_000_000)  // 0.3s

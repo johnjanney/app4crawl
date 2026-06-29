@@ -254,12 +254,14 @@ struct MainView: View {
             Circle()
                 .fill(server.isRunning ? Color.green : Color.secondary)
                 .frame(width: 8, height: 8)
-            Text(server.isRunning ? "Connected" : "Starting…")
+            Text(server.isRunning
+                ? "Connected\(server.serverVersion.map { " · v\($0)" } ?? "")"
+                : "Starting…")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
         .help(server.isRunning
-            ? "Connected to the local crawl server."
+            ? "Connected to the local crawl server (v\(server.serverVersion ?? "?"))."
             : "Waiting for the local crawl server.")
     }
 }

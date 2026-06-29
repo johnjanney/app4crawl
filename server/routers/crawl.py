@@ -195,8 +195,10 @@ def _make_single_worker(req: SingleCrawlRequest):
     """Create a worker coroutine for a single-URL crawl."""
 
     async def worker(ctx: JobContext) -> None:
+        is_youtube = youtube.is_youtube_url(req.url)
+        logger.info("single crawl: url=%s youtube=%s", req.url, is_youtube)
         # YouTube videos: return the transcript as Markdown instead of scraping.
-        if youtube.is_youtube_url(req.url):
+        if is_youtube:
             await ctx.progress("Fetching YouTube transcript…")
             try:
                 page = await asyncio.to_thread(youtube.build_page_result, req.url)

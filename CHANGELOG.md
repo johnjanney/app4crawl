@@ -6,6 +6,12 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+### Added
+- The "Connected" indicator now shows the backend version (e.g. "Connected ·
+  v1.1.0"), making it easy to confirm which server build the app is running.
+- Server logs the YouTube routing decision for each single crawl (in
+  `~/.app4crawl/logs/server.log`) to aid diagnosis.
+
 ## [1.1.0] - 2026-06-29
 
 ### Added
