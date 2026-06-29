@@ -2,12 +2,27 @@
 
 A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
 
+> **Status:** `1.0.0-rc.1` — feature-complete release candidate. The SwiftUI app
+> has not yet been compiled/run on macOS in this environment; see
+> `OPENQUESTIONS.md` before building or distributing.
+
 ## What it does
 
 App4Crawl puts the full feature set of [Crawl4AI](https://github.com/unclecode/crawl4ai)
 behind a clean, minimal native macOS interface. No command line, no manual config
 files, no Python knowledge required — the app manages its own Python environment and
 exposes crawling, content filtering, and LLM extraction through a visual UI.
+
+- Single-URL and deep crawls (BFS/DFS, configurable depth and page limit)
+- Output as clean Markdown, raw HTML, and extracted JSON
+- Content filtering (noise pruning and query-based BM25)
+- LLM extraction (schema- or instruction-based) across OpenAI, Anthropic,
+  Gemini, Ollama, and custom providers
+- API keys stored in the macOS Keychain, never on disk
+- Result viewer with Markdown / JSON-tree / HTML tabs and export to
+  `.md` / `.json` / `.html`
+- Local crawl history with one-click re-run
+- Guided first-launch setup that installs the Crawl4AI environment for you
 
 ## Requirements
 

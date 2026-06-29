@@ -169,11 +169,22 @@ struct MainView: View {
                 onRerun: { controller.rerun($0, baseURL: server.baseURL) })
                 .navigationSplitViewColumnWidth(min: 200, ideal: 240)
         } detail: {
-            content
-                .navigationTitle("App4Crawl")
-                .toolbar { toolbarContent }
+            VStack(spacing: 0) {
+                if !server.isRunning {
+                    serverBanner
+                }
+                content
+            }
+            .navigationTitle("App4Crawl")
+            .toolbar { toolbarContent }
         }
         .onAppear { controller.historyStore = history }
+        .onReceive(NotificationCenter.default.publisher(for: .newCrawl)) { _ in
+            controller.reset()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .runCrawl)) { _ in
+            if !controller.isBusy { controller.run(baseURL: server.baseURL) }
+        }
     }
 
     @ViewBuilder
@@ -191,6 +202,24 @@ struct MainView: View {
                 onRun: { controller.run(baseURL: server.baseURL) },
                 onCancel: { controller.cancel() })
         }
+    }
+
+    /// Banner shown while the local backend is starting or after a start error.
+    private var serverBanner: some View {
+        HStack(spacing: 8) {
+            if let error = server.lastError {
+                Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(.orange)
+                Text("Local server problem: \(error)")
+            } else {
+                ProgressView().controlSize(.small)
+                Text("Starting the local crawl server…")
+            }
+            Spacer()
+        }
+        .font(.callout)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(.bar)
     }
 
     @ToolbarContentBuilder

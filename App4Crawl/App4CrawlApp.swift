@@ -8,6 +8,13 @@
 
 import SwiftUI
 
+extension Notification.Name {
+    /// Posted by the New Crawl menu command (⌘N).
+    static let newCrawl = Notification.Name("app4crawl.newCrawl")
+    /// Posted by the Run menu command (⌘R).
+    static let runCrawl = Notification.Name("app4crawl.runCrawl")
+}
+
 @main
 struct App4CrawlApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
@@ -28,7 +35,18 @@ struct App4CrawlApp: App {
         }
         .windowStyle(.titleBar)
         .commands {
-            // Native menu commands (New Crawl, etc.) added in later phases.
+            CommandGroup(replacing: .newItem) {
+                Button("New Crawl") {
+                    NotificationCenter.default.post(name: .newCrawl, object: nil)
+                }
+                .keyboardShortcut("n", modifiers: .command)
+            }
+            CommandMenu("Crawl") {
+                Button("Run") {
+                    NotificationCenter.default.post(name: .runCrawl, object: nil)
+                }
+                .keyboardShortcut("r", modifiers: .command)
+            }
         }
 
         Settings {

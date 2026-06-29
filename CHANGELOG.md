@@ -6,7 +6,15 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+## [1.0.0-rc.1] - 2026-06-29
+
+Release candidate for 1.0.0. Numeric bundle version is 1.0.0; the `-rc.1`
+qualifier marks this as a pre-release pending a build/run on macOS (the Swift
+app has not yet been compiled — see OPENQUESTIONS).
+
 ### Added
+- Polish: app icon, ⌘N (New Crawl) and ⌘R (Run) menu commands, a local-server
+  status banner, and empty/error states throughout.
 - Python FastAPI backend scaffold (`server/`): all v1 endpoints, Pydantic
   request/response models, and in-memory job manager.
 - Environment management (Swift): `EnvironmentChecker` detects the Python /
