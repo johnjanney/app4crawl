@@ -17,6 +17,13 @@ Versioning: Semantic Versioning (https://semver.org/)
 - Onboarding flow (`OnboardingView`) with environment check, install, live log,
   verification, and completion states; app wires server lifecycle to launch on
   ready and shut down cleanly on quit.
+- Core UI (Swift): `CrawlAPIClient` (typed async client for all v1 endpoints
+  plus an SSE event stream), Codable `APIModels`/`JSONValue` matching the server
+  wire format, `CrawlConfigView` (single + deep crawl with progressive
+  disclosure and plain-English labels), `ResultView` (rendered Markdown, a
+  collapsible JSON tree, and raw HTML), and `MainView` with a sidebar/content
+  layout, a `CrawlController` that runs and polls crawls, a multi-page result
+  list, and a backend status indicator.
 
 ## [0.0.1] - 2026-06-28
 ### Added
