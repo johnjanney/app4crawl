@@ -7,12 +7,20 @@ scraping the page DOM. No API key required.
 
 from __future__ import annotations
 
+import html as html_lib
 import json
+import re
 import urllib.parse
 import urllib.request
 from typing import Optional
 
 from models import PageResult
+
+#: Browser-like User-Agent so YouTube doesn't gate title lookups as a bot.
+_USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 "
+    "(KHTML, like Gecko) Version/17.0 Safari/605.1.15"
+)
 
 #: Preferred caption languages, in order, before falling back to any available.
 PREFERRED_LANGUAGES = ["en", "en-US", "en-GB"]
@@ -65,7 +73,7 @@ def build_page_result(url: str) -> PageResult:
         raise YouTubeError("That doesn't look like a YouTube video URL.")
 
     segments = _fetch_segments(video_id)
-    title = _fetch_title(url) or f"YouTube transcript ({video_id})"
+    title = _fetch_title(video_id) or f"YouTube transcript ({video_id})"
     markdown = _format_markdown(title, url, segments)
     timestamped = [
         {"start": round(float(seg.get("start", 0.0)), 2), "text": seg["text"]}
@@ -131,19 +139,46 @@ def _fetch_segments(video_id: str) -> list[dict]:
         raise YouTubeError(f"Could not fetch the transcript: {exc}") from exc
 
 
-def _fetch_title(url: str) -> Optional[str]:
-    """Fetch the video title via YouTube's public oEmbed endpoint (no key)."""
+def _fetch_title(video_id: str) -> Optional[str]:
+    """Best-effort video title: oEmbed first, then the page ``<title>``.
+
+    Uses the canonical watch URL (oEmbed doesn't reliably accept ``youtu.be``
+    share links with tracking params).
+    """
+    watch_url = f"https://www.youtube.com/watch?v={video_id}"
+    return _oembed_title(watch_url) or _page_title(watch_url)
+
+
+def _oembed_title(watch_url: str) -> Optional[str]:
+    """Title via YouTube's public oEmbed endpoint (no key)."""
     endpoint = "https://www.youtube.com/oembed?" + urllib.parse.urlencode(
-        {"url": url, "format": "json"}
+        {"url": watch_url, "format": "json"}
     )
     try:
-        request = urllib.request.Request(endpoint, headers={"User-Agent": "App4Crawl"})
+        request = urllib.request.Request(endpoint, headers={"User-Agent": _USER_AGENT})
         with urllib.request.urlopen(request, timeout=10) as response:
             data = json.load(response)
         title = data.get("title")
         return title.strip() if isinstance(title, str) and title.strip() else None
     except Exception:  # noqa: BLE001 - title is best-effort
         return None
+
+
+def _page_title(watch_url: str) -> Optional[str]:
+    """Fallback: scrape the watch page's ``<title>`` (minus the ' - YouTube')."""
+    try:
+        request = urllib.request.Request(watch_url, headers={"User-Agent": _USER_AGENT})
+        with urllib.request.urlopen(request, timeout=10) as response:
+            html = response.read(300_000).decode("utf-8", "replace")
+    except Exception:  # noqa: BLE001 - title is best-effort
+        return None
+    match = re.search(r"<title>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
+    if not match:
+        return None
+    title = html_lib.unescape(match.group(1)).strip()
+    if title.endswith(" - YouTube"):
+        title = title[: -len(" - YouTube")].strip()
+    return title or None
 
 
 def _format_markdown(title: str, url: str, segments: list[dict]) -> str:
