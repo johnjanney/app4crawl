@@ -60,15 +60,17 @@ struct App4CrawlApp: App {
 
 /// Owns long-lived services so the server can be torn down on app termination
 /// (PROJECTBRIEF §2: shut the server down cleanly on quit).
+///
+/// Marked `@MainActor` so its `@MainActor`-isolated services can be created in
+/// stored-property initializers; an app delegate already runs on the main thread.
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let serverManager = ServerManager()
     let environmentChecker = EnvironmentChecker()
     let historyStore = HistoryStore()
 
     func applicationWillTerminate(_ notification: Notification) {
-        MainActor.assumeIsolated {
-            serverManager.stop()
-        }
+        serverManager.stop()
     }
 }
 
