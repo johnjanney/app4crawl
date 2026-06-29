@@ -29,6 +29,10 @@ Versioning: Semantic Versioning (https://semver.org/)
   Appearance panels; LLM-extraction UI in the crawl config; keys are injected
   per-run from the Keychain into the request → server → Crawl4AI `LLMConfig`.
   Appearance preference (system/light/dark) applied app-wide.
+- History & export (Swift): `HistoryStore` persists past crawls to
+  ~/.app4crawl/config/history.json (capped, no secrets); `HistoryView` lists
+  them with open-results, re-run, and delete; `ResultExporter` saves the
+  selected page as `.md`, `.json`, or `.html` via a save panel.
 
 ## [0.0.1] - 2026-06-28
 ### Added

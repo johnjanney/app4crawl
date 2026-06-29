@@ -28,6 +28,9 @@ final class CrawlController: ObservableObject {
     private var runTask: Task<Void, Never>?
     private let keychain = KeychainService()
 
+    /// Local history store; set by the view once available.
+    var historyStore: HistoryStore?
+
     var isBusy: Bool {
         if case .running = phase { return true }
         return false
@@ -93,6 +96,20 @@ final class CrawlController: ObservableObject {
         phase = .idle
     }
 
+    /// Open a past crawl's saved results without re-running.
+    func show(_ record: CrawlRecord) {
+        runTask?.cancel()
+        config = record.config
+        selectedPage = record.results.first
+        phase = .completed(record.results)
+    }
+
+    /// Re-run a past crawl's configuration.
+    func rerun(_ record: CrawlRecord, baseURL: URL?) {
+        config = record.config
+        run(baseURL: baseURL)
+    }
+
     private var lastBaseURL: URL?
 
     private func execute(config: CrawlConfig, baseURL: URL) async {
@@ -122,6 +139,7 @@ final class CrawlController: ObservableObject {
                     let result = try await client.result(jobID: created.jobId)
                     selectedPage = result.results.first
                     phase = .completed(result.results)
+                    historyStore?.add(CrawlRecord(config: config, results: result.results))
                     return
                 case .failed:
                     phase = .failed(status.error ?? "The crawl failed.")
@@ -141,17 +159,21 @@ final class CrawlController: ObservableObject {
 
 struct MainView: View {
     @EnvironmentObject private var server: ServerManager
+    @EnvironmentObject private var history: HistoryStore
     @StateObject private var controller = CrawlController()
 
     var body: some View {
         NavigationSplitView {
-            HistoryView()
+            HistoryView(
+                onSelect: { controller.show($0) },
+                onRerun: { controller.rerun($0, baseURL: server.baseURL) })
                 .navigationSplitViewColumnWidth(min: 200, ideal: 240)
         } detail: {
             content
                 .navigationTitle("App4Crawl")
                 .toolbar { toolbarContent }
         }
+        .onAppear { controller.historyStore = history }
     }
 
     @ViewBuilder
@@ -225,9 +247,29 @@ struct ResultsContainer: View {
             Text("\(pages.count) page\(pages.count == 1 ? "" : "s") crawled")
                 .font(.headline)
             Spacer()
+            exportMenu
             Button("New Crawl", systemImage: "plus", action: onNewCrawl)
         }
         .padding(12)
+    }
+
+    /// Export the currently selected page as Markdown, JSON, or HTML.
+    @ViewBuilder
+    private var exportMenu: some View {
+        if let page = selectedPage ?? pages.first {
+            Menu {
+                ForEach(ExportFormat.allCases) { format in
+                    Button(format.label) {
+                        ResultExporter.export(page, as: format)
+                    }
+                    .disabled(!ResultExporter.isAvailable(format, for: page))
+                }
+            } label: {
+                Label("Export", systemImage: "square.and.arrow.up")
+            }
+            .menuStyle(.borderlessButton)
+            .fixedSize()
+        }
     }
 
     private var pageList: some View {
@@ -262,4 +304,5 @@ struct ResultsContainer: View {
 #Preview {
     MainView()
         .environmentObject(ServerManager())
+        .environmentObject(HistoryStore())
 }

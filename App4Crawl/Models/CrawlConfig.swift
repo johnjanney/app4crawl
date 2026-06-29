@@ -24,8 +24,9 @@ enum CrawlStrategy: String, Codable, CaseIterable, Identifiable {
     }
 }
 
-/// Configuration for a single or deep crawl, edited in the UI.
-struct CrawlConfig: Equatable {
+/// Configuration for a single or deep crawl, edited in the UI. Codable so it
+/// can be saved in crawl history for re-running (it never holds the API key).
+struct CrawlConfig: Equatable, Codable {
     var url: String = ""
     var deep: Bool = false
     var strategy: CrawlStrategy = .bfs

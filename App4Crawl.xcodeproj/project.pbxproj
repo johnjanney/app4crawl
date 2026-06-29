@@ -25,6 +25,9 @@
 		1C0000000000000000000010 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000010 /* ProcessRunner.swift */; };
 		1C0000000000000000000011 /* APIModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000011 /* APIModels.swift */; };
 		1C0000000000000000000012 /* JSONValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000012 /* JSONValue.swift */; };
+		1C0000000000000000000013 /* CrawlHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000013 /* CrawlHistory.swift */; };
+		1C0000000000000000000014 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000014 /* HistoryStore.swift */; };
+		1C0000000000000000000015 /* ResultExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000015 /* ResultExporter.swift */; };
 		1D0000000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0000000000000000000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +52,9 @@
 		1B0000000000000000000010 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
 		1B0000000000000000000011 /* APIModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIModels.swift; sourceTree = "<group>"; };
 		1B0000000000000000000012 /* JSONValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONValue.swift; sourceTree = "<group>"; };
+		1B0000000000000000000013 /* CrawlHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrawlHistory.swift; sourceTree = "<group>"; };
+		1B0000000000000000000014 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000015 /* ResultExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultExporter.swift; sourceTree = "<group>"; };
 		1D0000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,6 +119,7 @@
 				1B000000000000000000000A /* LLMProvider.swift */,
 				1B0000000000000000000011 /* APIModels.swift */,
 				1B0000000000000000000012 /* JSONValue.swift */,
+				1B0000000000000000000013 /* CrawlHistory.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -126,6 +133,8 @@
 				1B000000000000000000000E /* EnvironmentChecker.swift */,
 				1B000000000000000000000F /* AppPaths.swift */,
 				1B0000000000000000000010 /* ProcessRunner.swift */,
+				1B0000000000000000000014 /* HistoryStore.swift */,
+				1B0000000000000000000015 /* ResultExporter.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -225,6 +234,9 @@
 				1C0000000000000000000010 /* ProcessRunner.swift in Sources */,
 				1C0000000000000000000011 /* APIModels.swift in Sources */,
 				1C0000000000000000000012 /* JSONValue.swift in Sources */,
+				1C0000000000000000000013 /* CrawlHistory.swift in Sources */,
+				1C0000000000000000000014 /* HistoryStore.swift in Sources */,
+				1C0000000000000000000015 /* ResultExporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -23,6 +23,7 @@ struct App4CrawlApp: App {
             RootView()
                 .environmentObject(appDelegate.serverManager)
                 .environmentObject(appDelegate.environmentChecker)
+                .environmentObject(appDelegate.historyStore)
                 .preferredColorScheme(colorScheme)
         }
         .windowStyle(.titleBar)
@@ -44,6 +45,7 @@ struct App4CrawlApp: App {
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let serverManager = ServerManager()
     let environmentChecker = EnvironmentChecker()
+    let historyStore = HistoryStore()
 
     func applicationWillTerminate(_ notification: Notification) {
         MainActor.assumeIsolated {
