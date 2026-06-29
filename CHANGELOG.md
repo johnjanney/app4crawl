@@ -6,6 +6,12 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+### Added
+- Meaningful crawl names: each crawl is auto-named from the page title (server
+  now returns it), with an optional "Name (optional)" field to override. The
+  name is used in the History list, the results header, and the export filename.
+  History entries can be renamed via the context menu.
+
 ## [1.0.0-rc.1] - 2026-06-29
 
 Release candidate for 1.0.0. Numeric bundle version is 1.0.0; the `-rc.1`

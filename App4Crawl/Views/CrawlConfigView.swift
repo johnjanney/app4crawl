@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CrawlConfigView: View {
     @Binding var config: CrawlConfig
+    @Binding var name: String
     let phase: CrawlPhase
     let onRun: () -> Void
     let onCancel: () -> Void
@@ -28,6 +29,9 @@ struct CrawlConfigView: View {
                 TextField("URL", text: $config.url, prompt: Text("https://example.com"))
                     .textFieldStyle(.roundedBorder)
                     .onSubmit(runIfPossible)
+                TextField("Name (optional)", text: $name,
+                          prompt: Text("Defaults to the page title"))
+                    .textFieldStyle(.roundedBorder)
                 Toggle("Follow links (deep crawl)", isOn: $config.deep)
             }
 
@@ -199,6 +203,7 @@ struct CrawlConfigView: View {
 #Preview {
     CrawlConfigView(
         config: .constant(CrawlConfig(url: "https://example.com")),
+        name: .constant(""),
         phase: .idle,
         onRun: {},
         onCancel: {})

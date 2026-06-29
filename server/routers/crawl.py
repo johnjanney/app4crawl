@@ -170,9 +170,13 @@ def _page_result_from(result: Any, options: CrawlOptions) -> PageResult:
         except (ValueError, TypeError):
             pass
 
+    metadata = getattr(result, "metadata", None)
+    title = metadata.get("title") if isinstance(metadata, dict) else None
+
     return PageResult(
         url=getattr(result, "url", ""),
         success=bool(getattr(result, "success", False)),
+        title=title,
         status_code=getattr(result, "status_code", None),
         markdown=raw_markdown,
         fit_markdown=fit_markdown if options.include_fit_markdown else None,

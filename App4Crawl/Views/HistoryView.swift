@@ -17,6 +17,9 @@ struct HistoryView: View {
     /// Re-run a record's configuration.
     var onRerun: (CrawlRecord) -> Void = { _ in }
 
+    @State private var renamingRecord: CrawlRecord?
+    @State private var renameText = ""
+
     var body: some View {
         List {
             Section("History") {
@@ -37,6 +40,24 @@ struct HistoryView: View {
                 }
             }
         }
+        .alert("Rename Crawl", isPresented: Binding(
+            get: { renamingRecord != nil },
+            set: { if !$0 { renamingRecord = nil } }
+        )) {
+            TextField("Name", text: $renameText)
+            Button("Cancel", role: .cancel) { renamingRecord = nil }
+            Button("Save") { commitRename() }
+        } message: {
+            Text("Give this crawl a memorable name.")
+        }
+    }
+
+    private func commitRename() {
+        guard var record = renamingRecord else { return }
+        let trimmed = renameText.trimmingCharacters(in: .whitespacesAndNewlines)
+        record.name = trimmed.isEmpty ? nil : trimmed
+        history.update(record)
+        renamingRecord = nil
     }
 
     private func row(_ record: CrawlRecord) -> some View {
@@ -48,18 +69,18 @@ struct HistoryView: View {
                     Image(systemName: record.succeeded ? "checkmark.circle.fill" : "xmark.circle.fill")
                         .foregroundStyle(record.succeeded ? .green : .red)
                         .font(.caption)
-                    Text(displayURL(record.url))
+                    Text(record.displayName)
                         .lineLimit(1)
-                        .truncationMode(.middle)
+                        .truncationMode(.tail)
                 }
                 HStack(spacing: 6) {
+                    if let host = URL(string: record.url)?.host {
+                        Text(host).lineLimit(1).truncationMode(.middle)
+                        Text("·")
+                    }
                     Text(record.date, format: .relative(presentation: .named))
                     Text("·")
                     Text("\(record.pageCount) page\(record.pageCount == 1 ? "" : "s")")
-                    if record.config.deep {
-                        Text("·")
-                        Text(record.config.strategy.rawValue.uppercased())
-                    }
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)
@@ -71,13 +92,13 @@ struct HistoryView: View {
         .contextMenu {
             Button("Open Results") { onSelect(record) }
             Button("Re-run") { onRerun(record) }
+            Button("Rename…") {
+                renameText = record.name ?? record.displayName
+                renamingRecord = record
+            }
             Divider()
             Button("Delete", role: .destructive) { history.delete(record) }
         }
-    }
-
-    private func displayURL(_ raw: String) -> String {
-        URL(string: raw)?.host ?? raw
     }
 }
 

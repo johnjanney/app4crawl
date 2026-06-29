@@ -100,6 +100,8 @@ struct JobStatusResponseDTO: Codable, Equatable {
 struct PageResultDTO: Codable, Equatable, Identifiable {
     var url: String
     var success: Bool
+    /// Page title from the document metadata, when available.
+    var title: String? = nil
     var statusCode: Int?
     var markdown: String?
     var fitMarkdown: String?

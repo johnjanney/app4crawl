@@ -165,6 +165,8 @@ class PageResult(BaseModel):
 
     url: str
     success: bool
+    #: Page title from the crawled document's metadata, if available.
+    title: Optional[str] = None
     status_code: Optional[int] = None
     markdown: Optional[str] = None
     fit_markdown: Optional[str] = None

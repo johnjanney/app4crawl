@@ -23,6 +23,8 @@ final class CrawlController: ObservableObject {
     @Published var config = CrawlConfig()
     @Published private(set) var phase: CrawlPhase = .idle
     @Published var selectedPage: PageResultDTO?
+    /// Optional user-provided name for this crawl (overrides the page title).
+    @Published var crawlName: String = ""
 
     private var currentJobID: String?
     private var runTask: Task<Void, Never>?
@@ -93,6 +95,7 @@ final class CrawlController: ObservableObject {
         runTask?.cancel()
         currentJobID = nil
         selectedPage = nil
+        crawlName = ""
         phase = .idle
     }
 
@@ -100,6 +103,7 @@ final class CrawlController: ObservableObject {
     func show(_ record: CrawlRecord) {
         runTask?.cancel()
         config = record.config
+        crawlName = record.name ?? ""
         selectedPage = record.results.first
         phase = .completed(record.results)
     }
@@ -107,7 +111,17 @@ final class CrawlController: ObservableObject {
     /// Re-run a past crawl's configuration.
     func rerun(_ record: CrawlRecord, baseURL: URL?) {
         config = record.config
+        crawlName = record.name ?? ""
         run(baseURL: baseURL)
+    }
+
+    /// The name to show for the current results (live, before it's a record).
+    func resolvedName(for pages: [PageResultDTO]) -> String {
+        CrawlRecord.resolveName(
+            custom: crawlName,
+            title: pages.first?.title,
+            markdown: pages.first?.fitMarkdown ?? pages.first?.markdown,
+            url: config.url)
     }
 
     private var lastBaseURL: URL?
@@ -139,7 +153,11 @@ final class CrawlController: ObservableObject {
                     let result = try await client.result(jobID: created.jobId)
                     selectedPage = result.results.first
                     phase = .completed(result.results)
-                    historyStore?.add(CrawlRecord(config: config, results: result.results))
+                    let trimmed = crawlName.trimmingCharacters(in: .whitespacesAndNewlines)
+                    historyStore?.add(CrawlRecord(
+                        config: config,
+                        results: result.results,
+                        name: trimmed.isEmpty ? nil : trimmed))
                     return
                 case .failed:
                     phase = .failed(status.error ?? "The crawl failed.")
@@ -192,12 +210,14 @@ struct MainView: View {
         switch controller.phase {
         case .completed(let pages):
             ResultsContainer(
+                name: controller.resolvedName(for: pages),
                 pages: pages,
                 selectedPage: $controller.selectedPage,
                 onNewCrawl: { controller.reset() })
         default:
             CrawlConfigView(
                 config: $controller.config,
+                name: $controller.crawlName,
                 phase: controller.phase,
                 onRun: { controller.run(baseURL: server.baseURL) },
                 onCancel: { controller.cancel() })
@@ -251,6 +271,7 @@ struct MainView: View {
 /// Shows crawl results: a page list when a deep crawl returned several pages,
 /// plus the detailed result viewer for the selected page.
 struct ResultsContainer: View {
+    let name: String
     let pages: [PageResultDTO]
     @Binding var selectedPage: PageResultDTO?
     let onNewCrawl: () -> Void
@@ -272,9 +293,16 @@ struct ResultsContainer: View {
     }
 
     private var header: some View {
-        HStack {
-            Text("\(pages.count) page\(pages.count == 1 ? "" : "s") crawled")
-                .font(.headline)
+        HStack(alignment: .firstTextBaseline) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(name)
+                    .font(.headline)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                Text("\(pages.count) page\(pages.count == 1 ? "" : "s") crawled")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
             Spacer()
             exportMenu
             Button("New Crawl", systemImage: "plus", action: onNewCrawl)
@@ -289,7 +317,7 @@ struct ResultsContainer: View {
             Menu {
                 ForEach(ExportFormat.allCases) { format in
                     Button(format.label) {
-                        ResultExporter.export(page, as: format)
+                        ResultExporter.export(page, as: format, suggestedName: name)
                     }
                     .disabled(!ResultExporter.isAvailable(format, for: page))
                 }

@@ -33,6 +33,13 @@ final class HistoryStore: ObservableObject {
         save()
     }
 
+    /// Replace an existing record (e.g. after a rename) and persist.
+    func update(_ record: CrawlRecord) {
+        guard let index = records.firstIndex(where: { $0.id == record.id }) else { return }
+        records[index] = record
+        save()
+    }
+
     /// Delete a record and persist.
     func delete(_ record: CrawlRecord) {
         records.removeAll { $0.id == record.id }

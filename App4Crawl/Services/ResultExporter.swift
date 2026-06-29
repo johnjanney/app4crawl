@@ -46,11 +46,13 @@ enum ExportFormat: String, CaseIterable, Identifiable {
 
 /// Writes crawl results to disk via a save panel.
 enum ResultExporter {
-    /// Present a save panel and write `page` in `format`.
+    /// Present a save panel and write `page` in `format`. `suggestedName` is the
+    /// crawl's display name, used to seed the filename.
     @MainActor
-    static func export(_ page: PageResultDTO, as format: ExportFormat) {
+    static func export(_ page: PageResultDTO, as format: ExportFormat,
+                       suggestedName: String? = nil) {
         let panel = NSSavePanel()
-        panel.nameFieldStringValue = suggestedName(for: page, format: format)
+        panel.nameFieldStringValue = fileName(for: page, format: format, name: suggestedName)
         panel.allowedContentTypes = [format.contentType]
         panel.canCreateDirectories = true
         guard panel.runModal() == .OK, let url = panel.url else { return }
@@ -89,10 +91,22 @@ enum ResultExporter {
         }
     }
 
-    private static func suggestedName(for page: PageResultDTO, format: ExportFormat) -> String {
-        let host = URL(string: page.url)?.host ?? "result"
-        let safe = host.replacingOccurrences(of: ".", with: "-")
-        return "\(safe).\(format.fileExtension)"
+    private static func fileName(for page: PageResultDTO, format: ExportFormat,
+                                 name: String?) -> String {
+        let base = name?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let candidate = (base?.isEmpty == false)
+            ? base!
+            : (page.title ?? URL(string: page.url)?.host ?? "result")
+        return "\(sanitize(candidate)).\(format.fileExtension)"
+    }
+
+    /// Make a string safe for use as a filename.
+    private static func sanitize(_ raw: String) -> String {
+        let invalid = CharacterSet(charactersIn: "/\\:*?\"<>|")
+        let cleaned = raw.components(separatedBy: invalid).joined(separator: "-")
+        let trimmed = cleaned.trimmingCharacters(in: .whitespacesAndNewlines)
+        let limited = String(trimmed.prefix(120))
+        return limited.isEmpty ? "result" : limited
     }
 
     private static func presentError(_ error: Error) {
