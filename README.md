@@ -2,9 +2,9 @@
 
 A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
 
-> **Status:** `1.0.0-rc.1` — feature-complete release candidate. The SwiftUI app
-> has not yet been compiled/run on macOS in this environment; see
-> `OPENQUESTIONS.md` before building or distributing.
+> **Status:** `1.0.0` — builds and runs on macOS 14+. For distribution to other
+> users, the app still needs code signing + notarization. See `OPENQUESTIONS.md`
+> for remaining known limitations (e.g. the custom LLM provider).
 
 ## What it does
 
@@ -81,4 +81,4 @@ design decisions are tracked in `OPENQUESTIONS.md`.
 
 ## License
 
-To be determined. See `OPENQUESTIONS.md`.
+Released under the [MIT License](LICENSE).

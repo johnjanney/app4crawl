@@ -6,21 +6,16 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
-### Added
-- Meaningful crawl names: each crawl is auto-named from the page title (server
-  now returns it), with an optional "Name (optional)" field to override. The
-  name is used in the History list, the results header, and the export filename.
-  History entries can be renamed via the context menu.
+## [1.0.0] - 2026-06-29
 
-## [1.0.0-rc.1] - 2026-06-29
-
-Release candidate for 1.0.0. Numeric bundle version is 1.0.0; the `-rc.1`
-qualifier marks this as a pre-release pending a build/run on macOS (the Swift
-app has not yet been compiled — see OPENQUESTIONS).
+First public release — a native macOS GUI for Crawl4AI. Licensed under MIT.
 
 ### Added
-- Polish: app icon, ⌘N (New Crawl) and ⌘R (Run) menu commands, a local-server
-  status banner, and empty/error states throughout.
+- Meaningful crawl names: auto-named from the page title (returned by the
+  server) with an optional override field; used in the History list, the results
+  header, and export filenames; history entries can be renamed.
+- App icon, ⌘N (New Crawl) and ⌘R (Run) menu commands, a local-server status
+  banner, and empty/error states throughout.
 - Python FastAPI backend scaffold (`server/`): all v1 endpoints, Pydantic
   request/response models, and in-memory job manager.
 - Environment management (Swift): `EnvironmentChecker` detects the Python /
@@ -47,6 +42,16 @@ app has not yet been compiled — see OPENQUESTIONS).
   ~/.app4crawl/config/history.json (capped, no secrets); `HistoryView` lists
   them with open-results, re-run, and delete; `ResultExporter` saves the
   selected page as `.md`, `.json`, or `.html` via a save panel.
+
+### Fixed
+- macOS build/run: main-actor-isolated `AppDelegate`; detect user-installed
+  Python outside the GUI app's restricted PATH; verify Crawl4AI via package
+  metadata (instead of a heavy import); bundle the FastAPI server (`server/`)
+  into the app so the backend launches.
+
+### Known limitations
+- The custom LLM provider does not yet map correctly to Crawl4AI/LiteLLM
+  (OPENQUESTIONS #10). OpenAI, Anthropic, Gemini, and Ollama work.
 
 ## [0.0.1] - 2026-06-28
 ### Added
