@@ -6,6 +6,16 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-06-29
+
+### Added
+- YouTube transcripts: paste a YouTube video URL (watch, youtu.be, shorts, or
+  embed) and App4Crawl returns the transcript as Markdown instead of scraping
+  the page, with timestamped segments in the JSON tab. Uses
+  `youtube-transcript-api`; no API key. The crawl is named after the video
+  title. Existing installs: run Settings → Environment → Reinstall / Update to
+  add the new dependency.
+
 ### Fixed
 - Silence Swift concurrency warnings in `EnvironmentChecker.install()` by passing
   the install-log callback as a `@Sendable` closure literal instead of a method

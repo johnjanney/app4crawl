@@ -217,7 +217,8 @@ final class EnvironmentChecker: ObservableObject {
             try await step("Installing server dependencies…") {
                 try await ProcessRunner.run(
                     executableURL: AppPaths.venvPython,
-                    arguments: ["-m", "pip", "install", "-U", "fastapi", "uvicorn[standard]"],
+                    arguments: ["-m", "pip", "install", "-U",
+                                "fastapi", "uvicorn[standard]", "youtube-transcript-api"],
                     onOutput: { [weak self] line in self?.appendLog(line) })
             }
 

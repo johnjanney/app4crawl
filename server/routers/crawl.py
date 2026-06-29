@@ -8,6 +8,7 @@ Crawl4AI is not yet installed.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from typing import Any, Optional
@@ -15,6 +16,7 @@ from typing import Any, Optional
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import StreamingResponse
 
+import youtube
 from job_manager import JobContext, JobManager
 from models import (
     ContentFilterType,
@@ -193,6 +195,17 @@ def _make_single_worker(req: SingleCrawlRequest):
     """Create a worker coroutine for a single-URL crawl."""
 
     async def worker(ctx: JobContext) -> None:
+        # YouTube videos: return the transcript as Markdown instead of scraping.
+        if youtube.is_youtube_url(req.url):
+            await ctx.progress("Fetching YouTube transcript…")
+            try:
+                page = await asyncio.to_thread(youtube.build_page_result, req.url)
+            except youtube.YouTubeError as exc:
+                raise RuntimeError(str(exc)) from exc
+            await ctx.add_result(page)
+            await ctx.progress("Transcript ready")
+            return
+
         AsyncWebCrawler = _require_crawler()
 
         await ctx.progress(f"Starting crawl of {req.url}")

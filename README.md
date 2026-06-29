@@ -2,7 +2,7 @@
 
 A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
 
-> **Status:** `1.0.1` — builds and runs on macOS 14+. For distribution to other
+> **Status:** `1.1.0` — builds and runs on macOS 14+. For distribution to other
 > users, the app still needs code signing + notarization (see `OPENQUESTIONS.md`).
 
 ## What it does
@@ -20,6 +20,7 @@ exposes crawling, content filtering, and LLM extraction through a visual UI.
 - API keys stored in the macOS Keychain, never on disk
 - Result viewer with Markdown / JSON-tree / HTML tabs and export to
   `.md` / `.json` / `.html`
+- YouTube transcripts: paste a video URL to get the transcript as Markdown
 - Local crawl history with one-click re-run
 - Guided first-launch setup that installs the Crawl4AI environment for you
 

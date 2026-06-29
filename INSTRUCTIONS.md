@@ -33,6 +33,18 @@ If everything is already installed, you go straight to the main screen.
 3. Click **Run**.
 4. View the result in the Markdown / JSON / HTML tabs.
 
+## How to get a YouTube transcript
+
+1. Copy a YouTube video URL (e.g. `https://www.youtube.com/watch?v=…`,
+   `https://youtu.be/…`, or a Shorts link).
+2. Paste it into the URL field and click **Run**.
+3. The **Markdown** tab shows the transcript (named after the video); the
+   **JSON** tab shows timestamped segments. Use **Export** to save it as `.md`.
+
+If you see "YouTube transcript support isn't installed," open **Settings →
+Environment** and choose **Reinstall / Update**. Note: a transcript must exist
+for the video (some videos have captions disabled).
+
 ## How to run a deep crawl
 
 1. Start a new crawl and open the **Advanced** section.
