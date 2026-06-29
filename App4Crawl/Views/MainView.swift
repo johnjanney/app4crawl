@@ -26,6 +26,7 @@ final class CrawlController: ObservableObject {
 
     private var currentJobID: String?
     private var runTask: Task<Void, Never>?
+    private let keychain = KeychainService()
 
     var isBusy: Bool {
         if case .running = phase { return true }
@@ -38,9 +39,36 @@ final class CrawlController: ObservableObject {
             phase = .failed("The local server isn’t running yet.")
             return
         }
+        if let problem = config.validationError {
+            phase = .failed(problem)
+            return
+        }
+        if config.extractionEnabled,
+           config.extractionProvider.requiresAPIKey,
+           !keychain.hasKey(for: config.extractionProvider) {
+            phase = .failed(
+                "Add an API key for \(config.extractionProvider.displayName) in Settings (⌘,).")
+            return
+        }
         runTask?.cancel()
         let config = self.config
         runTask = Task { await self.execute(config: config, baseURL: baseURL) }
+    }
+
+    /// Inject the Keychain API key (and custom base URL) into an outgoing
+    /// request's extraction options. Keys are read per-run and never persisted
+    /// outside the Keychain (PROJECTBRIEF §7).
+    private func injectCredentials(into options: inout CrawlOptionsDTO) {
+        guard var extraction = options.extraction else { return }
+        let provider = extraction.llm.provider
+        if provider.requiresAPIKey {
+            extraction.llm.apiKey = keychain.get(for: provider)
+        }
+        if provider == .custom {
+            extraction.llm.baseURL =
+                UserDefaults.standard.string(forKey: AppDefaults.customLLMBaseURL)
+        }
+        options.extraction = extraction
     }
 
     /// Cancel the in-flight crawl (best effort).
@@ -72,9 +100,16 @@ final class CrawlController: ObservableObject {
         let client = CrawlAPIClient(baseURL: baseURL)
         phase = .running(pages: 0)
         do {
-            let created = config.deep
-                ? try await client.startDeep(config.deepRequest())
-                : try await client.startSingle(config.singleRequest())
+            let created: JobCreatedResponseDTO
+            if config.deep {
+                var request = config.deepRequest()
+                injectCredentials(into: &request.options)
+                created = try await client.startDeep(request)
+            } else {
+                var request = config.singleRequest()
+                injectCredentials(into: &request.options)
+                created = try await client.startSingle(request)
+            }
             currentJobID = created.jobId
 
             while !Task.isCancelled {

@@ -38,6 +38,7 @@ struct CrawlConfigView: View {
             DisclosureGroup("Advanced", isExpanded: $showAdvanced) {
                 outputSection
                 filterSection
+                extractionSection
                 Toggle("Ignore cached results", isOn: $config.bypassCache)
             }
 
@@ -104,6 +105,67 @@ struct CrawlConfigView: View {
                     .textFieldStyle(.roundedBorder)
             case .none:
                 EmptyView()
+            }
+        }
+    }
+
+    private var extractionSection: some View {
+        Section("LLM extraction") {
+            Toggle("Extract structured data with an LLM", isOn: $config.extractionEnabled)
+            if config.extractionEnabled {
+                Picker("Provider", selection: $config.extractionProvider) {
+                    ForEach(LLMProvider.allCases) { provider in
+                        Text(provider.displayName).tag(provider)
+                    }
+                }
+                modelField
+                Picker("Mode", selection: $config.extractionType) {
+                    Text("Describe what to extract").tag(ExtractionType.instruction)
+                    Text("Provide a JSON schema").tag(ExtractionType.schema)
+                }
+                .pickerStyle(.segmented)
+
+                switch config.extractionType {
+                case .instruction:
+                    TextField("What should be extracted?",
+                              text: $config.extractionInstruction,
+                              prompt: Text("e.g. the product name, price, and rating"),
+                              axis: .vertical)
+                        .lineLimit(2...5)
+                case .schema:
+                    TextEditor(text: $config.extractionSchemaText)
+                        .font(.system(.caption, design: .monospaced))
+                        .frame(minHeight: 100)
+                        .overlay(RoundedRectangle(cornerRadius: 6).stroke(.separator))
+                }
+
+                if config.extractionProvider.requiresAPIKey {
+                    Label("Set an API key for \(config.extractionProvider.displayName) in Settings (⌘,).",
+                          systemImage: "key")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var modelField: some View {
+        let suggestions = config.extractionProvider.suggestedModels
+        HStack {
+            TextField("Model", text: $config.extractionModel,
+                      prompt: Text(suggestions.first ?? "model name"))
+                .textFieldStyle(.roundedBorder)
+            if !suggestions.isEmpty {
+                Menu {
+                    ForEach(suggestions, id: \.self) { model in
+                        Button(model) { config.extractionModel = model }
+                    }
+                } label: {
+                    Image(systemName: "list.bullet")
+                }
+                .menuStyle(.borderlessButton)
+                .frame(width: 28)
             }
         }
     }

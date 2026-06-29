@@ -12,11 +12,18 @@ import SwiftUI
 struct App4CrawlApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
+    @AppStorage(AppDefaults.appearance) private var appearanceRaw = AppTheme.system.rawValue
+
+    private var colorScheme: ColorScheme? {
+        AppTheme(rawValue: appearanceRaw)?.colorScheme
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(appDelegate.serverManager)
                 .environmentObject(appDelegate.environmentChecker)
+                .preferredColorScheme(colorScheme)
         }
         .windowStyle(.titleBar)
         .commands {
@@ -26,6 +33,8 @@ struct App4CrawlApp: App {
         Settings {
             SettingsView()
                 .environmentObject(appDelegate.serverManager)
+                .environmentObject(appDelegate.environmentChecker)
+                .preferredColorScheme(colorScheme)
         }
     }
 }

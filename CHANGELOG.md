@@ -24,6 +24,11 @@ Versioning: Semantic Versioning (https://semver.org/)
   collapsible JSON tree, and raw HTML), and `MainView` with a sidebar/content
   layout, a `CrawlController` that runs and polls crawls, a multi-page result
   list, and a backend status indicator.
+- API key management (Swift): `KeychainService` stores per-provider keys in the
+  macOS Keychain (never on disk); Settings gains API Keys, Environment, and
+  Appearance panels; LLM-extraction UI in the crawl config; keys are injected
+  per-run from the Keychain into the request → server → Crawl4AI `LLMConfig`.
+  Appearance preference (system/light/dark) applied app-wide.
 
 ## [0.0.1] - 2026-06-28
 ### Added

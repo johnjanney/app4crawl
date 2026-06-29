@@ -47,3 +47,12 @@ enum AppPaths {
             at: logsDir, withIntermediateDirectories: true)
     }
 }
+
+/// Keys for non-sensitive preferences stored in `UserDefaults`. (API keys are
+/// never stored here — see `KeychainService`.)
+enum AppDefaults {
+    /// Selected appearance (see `AppTheme`).
+    static let appearance = "appearance"
+    /// Base URL for the custom LLM provider (non-sensitive).
+    static let customLLMBaseURL = "customLLMBaseURL"
+}
