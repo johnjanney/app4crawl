@@ -55,7 +55,7 @@ pip install -r requirements.txt
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
-<img width="2024" height="1554" alt="SCR-20260628-txbd" src="https://github.com/user-attachments/assets/e303acff-ecba-4089-b4c0-ccb8d0dbda0b" />
+<img width="2024" height="1554" alt="SCR-20260628-txxe" src="https://github.com/user-attachments/assets/3ad687f9-7ae9-4903-9865-a41144e36a41" />
 
 
 ## Architecture overview
