@@ -53,6 +53,4 @@ enum AppPaths {
 enum AppDefaults {
     /// Selected appearance (see `AppTheme`).
     static let appearance = "appearance"
-    /// Base URL for the custom LLM provider (non-sensitive).
-    static let customLLMBaseURL = "customLLMBaseURL"
 }

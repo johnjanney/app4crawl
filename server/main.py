@@ -109,12 +109,6 @@ _PROVIDERS: list[ProviderInfo] = [
         requires_api_key=False,
         suggested_models=["llama3.3", "qwen2.5"],
     ),
-    ProviderInfo(
-        id=LLMProviderId.custom,
-        display_name="Custom",
-        requires_api_key=True,
-        suggested_models=[],
-    ),
 ]
 
 

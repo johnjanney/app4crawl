@@ -2,9 +2,8 @@
 
 A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
 
-> **Status:** `1.0.0` — builds and runs on macOS 14+. For distribution to other
-> users, the app still needs code signing + notarization. See `OPENQUESTIONS.md`
-> for remaining known limitations (e.g. the custom LLM provider).
+> **Status:** `1.0.1` — builds and runs on macOS 14+. For distribution to other
+> users, the app still needs code signing + notarization (see `OPENQUESTIONS.md`).
 
 ## What it does
 
@@ -17,7 +16,7 @@ exposes crawling, content filtering, and LLM extraction through a visual UI.
 - Output as clean Markdown, raw HTML, and extracted JSON
 - Content filtering (noise pruning and query-based BM25)
 - LLM extraction (schema- or instruction-based) across OpenAI, Anthropic,
-  Gemini, Ollama, and custom providers
+  Gemini, and Ollama
 - API keys stored in the macOS Keychain, never on disk
 - Result viewer with Markdown / JSON-tree / HTML tabs and export to
   `.md` / `.json` / `.html`

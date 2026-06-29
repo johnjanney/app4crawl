@@ -7,14 +7,12 @@
 
 import Foundation
 
-/// LLM providers supported in v1. `ollama` is local and needs no key;
-/// `custom` supplies its own base URL and key.
+/// LLM providers supported in v1. `ollama` is local and needs no key.
 enum LLMProvider: String, Codable, CaseIterable, Identifiable {
     case openai
     case anthropic
     case gemini
     case ollama
-    case custom
 
     var id: String { rawValue }
 
@@ -30,7 +28,6 @@ enum LLMProvider: String, Codable, CaseIterable, Identifiable {
         case .anthropic: return "Anthropic"
         case .gemini: return "Gemini"
         case .ollama: return "Ollama (local)"
-        case .custom: return "Custom"
         }
     }
 
@@ -42,7 +39,6 @@ enum LLMProvider: String, Codable, CaseIterable, Identifiable {
         case .anthropic: return ["claude-3-5-sonnet-20241022", "claude-3-5-haiku-20241022"]
         case .gemini: return ["gemini-1.5-pro", "gemini-1.5-flash"]
         case .ollama: return ["llama3.3", "qwen2.5"]
-        case .custom: return []
         }
     }
 }

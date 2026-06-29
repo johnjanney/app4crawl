@@ -55,7 +55,6 @@ class LLMProviderId(str, Enum):
     anthropic = "anthropic"
     gemini = "gemini"
     ollama = "ollama"
-    custom = "custom"
 
 
 # --------------------------------------------------------------------------- #

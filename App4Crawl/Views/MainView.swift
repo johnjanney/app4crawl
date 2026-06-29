@@ -60,18 +60,14 @@ final class CrawlController: ObservableObject {
         runTask = Task { await self.execute(config: config, baseURL: baseURL) }
     }
 
-    /// Inject the Keychain API key (and custom base URL) into an outgoing
-    /// request's extraction options. Keys are read per-run and never persisted
-    /// outside the Keychain (PROJECTBRIEF §7).
+    /// Inject the Keychain API key into an outgoing request's extraction
+    /// options. Keys are read per-run and never persisted outside the Keychain
+    /// (PROJECTBRIEF §7).
     private func injectCredentials(into options: inout CrawlOptionsDTO) {
         guard var extraction = options.extraction else { return }
         let provider = extraction.llm.provider
         if provider.requiresAPIKey {
             extraction.llm.apiKey = keychain.get(for: provider)
-        }
-        if provider == .custom {
-            extraction.llm.baseURL =
-                UserDefaults.standard.string(forKey: AppDefaults.customLLMBaseURL)
         }
         options.extraction = extraction
     }

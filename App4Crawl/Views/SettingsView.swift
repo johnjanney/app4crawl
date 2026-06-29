@@ -53,7 +53,6 @@ struct SettingsView: View {
 struct APIKeysSettingsView: View {
     /// Providers that need a key (Ollama is local and excluded).
     private let providers = LLMProvider.allCases.filter { $0.requiresAPIKey }
-    @AppStorage(AppDefaults.customLLMBaseURL) private var customBaseURL = ""
 
     var body: some View {
         Form {
@@ -65,11 +64,6 @@ struct APIKeysSettingsView: View {
             ForEach(providers) { provider in
                 Section(provider.displayName) {
                     APIKeyRow(provider: provider)
-                    if provider == .custom {
-                        TextField("Base URL", text: $customBaseURL,
-                                  prompt: Text("https://api.example.com/v1"))
-                            .textFieldStyle(.roundedBorder)
-                    }
                 }
             }
         }

@@ -6,6 +6,13 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-29
+
+### Removed
+- The "Custom" LLM provider (base URL + key) is removed from the app and server.
+  It never mapped correctly to Crawl4AI/LiteLLM and isn't needed. Supported
+  providers are OpenAI, Anthropic, Gemini, and Ollama.
+
 ## [1.0.0] - 2026-06-29
 
 First public release — a native macOS GUI for Crawl4AI. Licensed under MIT.
