@@ -194,21 +194,21 @@ final class EnvironmentChecker: ObservableObject {
                 try await ProcessRunner.run(
                     executableURL: pythonURL,
                     arguments: ["-m", "venv", AppPaths.venv.path],
-                    onOutput: self.appendLog)
+                    onOutput: { [weak self] line in self?.appendLog(line) })
             }
 
             try await step("Upgrading pip…") {
                 try await ProcessRunner.run(
                     executableURL: AppPaths.venvPython,
                     arguments: ["-m", "pip", "install", "--upgrade", "pip"],
-                    onOutput: self.appendLog)
+                    onOutput: { [weak self] line in self?.appendLog(line) })
             }
 
             try await step("Installing Crawl4AI (this can take a few minutes)…") {
                 try await ProcessRunner.run(
                     executableURL: AppPaths.venvPython,
                     arguments: ["-m", "pip", "install", "-U", "crawl4ai"],
-                    onOutput: self.appendLog)
+                    onOutput: { [weak self] line in self?.appendLog(line) })
             }
 
             // The bundled FastAPI server runs from this same venv (PROJECTBRIEF
@@ -218,14 +218,14 @@ final class EnvironmentChecker: ObservableObject {
                 try await ProcessRunner.run(
                     executableURL: AppPaths.venvPython,
                     arguments: ["-m", "pip", "install", "-U", "fastapi", "uvicorn[standard]"],
-                    onOutput: self.appendLog)
+                    onOutput: { [weak self] line in self?.appendLog(line) })
             }
 
             try await step("Installing Playwright + Chromium…") {
                 try await ProcessRunner.run(
                     executableURL: AppPaths.crawl4aiSetup,
                     arguments: [],
-                    onOutput: self.appendLog)
+                    onOutput: { [weak self] line in self?.appendLog(line) })
             }
 
             // Verification with crawl4ai-doctor (its exit code is authoritative).
@@ -233,7 +233,7 @@ final class EnvironmentChecker: ObservableObject {
             let doctor = try? await ProcessRunner.run(
                 executableURL: AppPaths.crawl4aiDoctor,
                 arguments: [],
-                onOutput: self.appendLog)
+                onOutput: { [weak self] line in self?.appendLog(line) })
 
             // Confirm via metadata as well; either signal is sufficient.
             let probe = await probe(AppPaths.venvPython)

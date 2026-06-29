@@ -6,6 +6,11 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+### Fixed
+- Silence Swift concurrency warnings in `EnvironmentChecker.install()` by passing
+  the install-log callback as a `@Sendable` closure literal instead of a method
+  reference (no behavior change).
+
 ## [1.0.1] - 2026-06-29
 
 ### Removed
