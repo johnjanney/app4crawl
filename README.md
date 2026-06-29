@@ -1,3 +1,4 @@
+<img width="2024" height="1554" alt="SCR-20260628-txbd" src="https://github.com/user-attachments/assets/e303acff-ecba-4089-b4c0-ccb8d0dbda0b" />
 # App4Crawl
 
 A native macOS GUI for Crawl4AI — the open-source LLM-friendly web crawler.
@@ -54,6 +55,7 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --host 127.0.0.1 --port 8000
 ```
+
 
 ## Architecture overview
 
