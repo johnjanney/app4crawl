@@ -75,6 +75,10 @@ final class EnvironmentChecker: ObservableObject {
         return nil
     }
 
+    /// Absolute path to the system Python discovered during the last check,
+    /// used to create the managed venv during install.
+    private var systemPythonURL: URL?
+
     /// Python script that reports interpreter and Crawl4AI versions in one shot.
     private static let probeScript = """
         import sys
@@ -95,7 +99,7 @@ final class EnvironmentChecker: ObservableObject {
 
         // 1. Managed venv.
         if FileManager.default.isExecutableFile(atPath: AppPaths.venvPython.path) {
-            let probe = await probe(pythonURL: AppPaths.venvPython, viaEnv: false)
+            let probe = await probe(AppPaths.venvPython)
             if let pyVersion = probe.pythonVersion, let c4ai = probe.crawl4aiVersion {
                 state = .ready(
                     EnvironmentInfo(
@@ -107,12 +111,10 @@ final class EnvironmentChecker: ObservableObject {
             }
         }
 
-        // 2. System Python.
-        let systemProbe = await probe(pythonURL: nil, viaEnv: true)
-        guard let sysVersion = systemProbe.pythonVersion,
-              let tuple = systemProbe.versionTuple,
-              meetsMinimum(tuple)
-        else {
+        // 2. System Python — search known install locations (a GUI app's PATH
+        // does not include /usr/local/bin, /opt/homebrew/bin, or the python.org
+        // framework, so we cannot rely on `env python3`).
+        guard let (url, systemProbe) = await discoverSystemPython() else {
             state = .pythonMissing(
                 message: """
                     Python \(AppPaths.minimumPythonVersion.major).\
@@ -122,40 +124,29 @@ final class EnvironmentChecker: ObservableObject {
                     """)
             return
         }
+        systemPythonURL = url
 
         if let c4ai = systemProbe.crawl4aiVersion {
-            let path = await resolveSystemPythonPath() ?? "/usr/bin/env"
             state = .ready(
                 EnvironmentInfo(
                     source: .systemPython,
-                    pythonPath: path,
-                    pythonVersion: sysVersion,
+                    pythonPath: url.path,
+                    pythonVersion: systemProbe.pythonVersion ?? "unknown",
                     crawl4aiVersion: c4ai))
         } else {
-            state = .needsInstall(pythonVersion: sysVersion)
+            state = .needsInstall(pythonVersion: systemProbe.pythonVersion ?? "unknown")
         }
     }
 
     /// Probe an interpreter for its version and Crawl4AI availability.
-    private func probe(pythonURL: URL?, viaEnv: Bool) async -> ProbeResult {
+    private func probe(_ pythonURL: URL) async -> ProbeResult {
         var result = ProbeResult()
         let collector = OutputCollector()
         do {
-            let run: ProcessRunResult
-            if viaEnv {
-                run = try await ProcessRunner.runViaEnv(
-                    tool: "python3",
-                    arguments: ["-c", Self.probeScript],
-                    onOutput: { collector.append($0) })
-            } else if let pythonURL {
-                run = try await ProcessRunner.run(
-                    executableURL: pythonURL,
-                    arguments: ["-c", Self.probeScript],
-                    onOutput: { collector.append($0) })
-            } else {
-                return result
-            }
-            _ = run
+            _ = try await ProcessRunner.run(
+                executableURL: pythonURL,
+                arguments: ["-c", Self.probeScript],
+                onOutput: { collector.append($0) })
         } catch {
             return result
         }
@@ -184,9 +175,22 @@ final class EnvironmentChecker: ObservableObject {
         do {
             try AppPaths.ensureDirectories()
 
+            // Resolve the absolute Python to build the venv with.
+            let pythonURL: URL
+            if let url = systemPythonURL {
+                pythonURL = url
+            } else if let discovered = await discoverSystemPython() {
+                pythonURL = discovered.0
+                systemPythonURL = discovered.0
+            } else {
+                state = .pythonMissing(
+                    message: "Python 3.\(AppPaths.minimumPythonVersion.minor)+ was not found.")
+                return
+            }
+
             try await step("Creating virtual environment…") {
-                try await ProcessRunner.runViaEnv(
-                    tool: "python3",
+                try await ProcessRunner.run(
+                    executableURL: pythonURL,
                     arguments: ["-m", "venv", AppPaths.venv.path],
                     onOutput: self.appendLog)
             }
@@ -285,12 +289,52 @@ final class EnvironmentChecker: ObservableObject {
         return (parts[0], parts[1])
     }
 
-    /// Resolve the absolute path of the system `python3`, for later launches.
-    private func resolveSystemPythonPath() async -> String? {
+    /// Find the newest usable system Python (≥ minimum) by checking known
+    /// install locations and the user's login-shell PATH. Returns the
+    /// interpreter URL and its probe result, or `nil` if none qualifies.
+    private func discoverSystemPython() async -> (URL, ProbeResult)? {
+        var seen = Set<String>()
+        var candidates: [URL] = []
+        func add(_ path: String) {
+            guard !seen.contains(path),
+                  FileManager.default.isExecutableFile(atPath: path) else { return }
+            seen.insert(path)
+            candidates.append(URL(fileURLWithPath: path))
+        }
+
+        // python.org framework installs (newest version first).
+        let frameworkBase = "/Library/Frameworks/Python.framework/Versions"
+        if let versions = try? FileManager.default.contentsOfDirectory(atPath: frameworkBase) {
+            for version in versions.sorted(by: >) {
+                add("\(frameworkBase)/\(version)/bin/python3")
+            }
+        }
+        // Homebrew (Apple Silicon, then Intel) and system locations.
+        add("/opt/homebrew/bin/python3")
+        add("/usr/local/bin/python3")
+        // Whatever the user's interactive shell resolves (catches pyenv, etc.).
+        if let shellPython = await pythonViaLoginShell() {
+            add(shellPython)
+        }
+        add("/usr/bin/python3")
+
+        for url in candidates {
+            let probe = await probe(url)
+            if let tuple = probe.versionTuple, meetsMinimum(tuple) {
+                return (url, probe)
+            }
+        }
+        return nil
+    }
+
+    /// Resolve `python3` via the user's login shell, which loads their full PATH.
+    private func pythonViaLoginShell() async -> String? {
+        let shell = ProcessInfo.processInfo.environment["SHELL"] ?? "/bin/zsh"
+        guard FileManager.default.isExecutableFile(atPath: shell) else { return nil }
         let collector = OutputCollector()
-        _ = try? await ProcessRunner.runViaEnv(
-            tool: "which",
-            arguments: ["python3"],
+        _ = try? await ProcessRunner.run(
+            executableURL: URL(fileURLWithPath: shell),
+            arguments: ["-lc", "command -v python3"],
             onOutput: { collector.append($0) })
         let resolved = collector.lines.first?
             .trimmingCharacters(in: .whitespacesAndNewlines)
