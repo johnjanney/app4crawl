@@ -46,16 +46,20 @@ final class ServerManager: ObservableObject {
 
     // MARK: - Lifecycle
 
-    /// Launches the server subprocess using `pythonURL`, serving the FastAPI app
-    /// located in `serverDirectory`, then waits until it is healthy.
-    func start(pythonURL: URL, serverDirectory: URL) async {
+    /// Launches the server subprocess using `pythonURL`, serving the bundled
+    /// FastAPI app, then waits until it is healthy. Sets `lastError` (visible in
+    /// the UI) if the server code can't be found or it never becomes healthy.
+    func start(pythonURL: URL) async {
         guard !isRunning, process == nil else { return }
         lastError = nil
 
+        guard let serverDirectory = Self.bundledServerDirectory() else {
+            lastError = "The bundled server code wasn’t found in the app. "
+                + "Rebuild with the server/ folder included."
+            return
+        }
+
         do {
-            guard FileManager.default.fileExists(atPath: serverDirectory.path) else {
-                throw ServerError.serverDirectoryMissing
-            }
             let chosenPort = try Self.allocatePort()
             try AppPaths.ensureDirectories()
 
@@ -110,7 +114,16 @@ final class ServerManager: ObservableObject {
 
     /// Locates the FastAPI server code bundled inside the app.
     static func bundledServerDirectory() -> URL? {
-        Bundle.main.url(forResource: "server", withExtension: nil)
+        if let url = Bundle.main.url(forResource: "server", withExtension: nil) {
+            return url
+        }
+        if let resources = Bundle.main.resourceURL {
+            let candidate = resources.appendingPathComponent("server", isDirectory: true)
+            if FileManager.default.fileExists(atPath: candidate.path) {
+                return candidate
+            }
+        }
+        return nil
     }
 
     // MARK: - Helpers

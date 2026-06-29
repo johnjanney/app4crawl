@@ -29,6 +29,7 @@
 		1C0000000000000000000014 /* HistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000014 /* HistoryStore.swift */; };
 		1C0000000000000000000015 /* ResultExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000015 /* ResultExporter.swift */; };
 		1D0000000000000000000002 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D0000000000000000000001 /* Assets.xcassets */; };
+		1D0000000000000000000003 /* server in Resources */ = {isa = PBXBuildFile; fileRef = 1D0000000000000000000004 /* server */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		1B0000000000000000000014 /* HistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryStore.swift; sourceTree = "<group>"; };
 		1B0000000000000000000015 /* ResultExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultExporter.swift; sourceTree = "<group>"; };
 		1D0000000000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1D0000000000000000000004 /* server */ = {isa = PBXFileReference; lastKnownFileType = folder; path = server; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				1A0000000000000000000004 /* App4Crawl */,
+				1D0000000000000000000004 /* server */,
 				1A0000000000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D0000000000000000000002 /* Assets.xcassets in Resources */,
+				1D0000000000000000000003 /* server in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -102,11 +102,7 @@ struct RootView: View {
 
     /// Launch the FastAPI backend with the detected interpreter.
     private func startServer(with info: EnvironmentInfo) async {
-        guard !server.isRunning,
-              let serverDirectory = ServerManager.bundledServerDirectory()
-        else { return }
-        await server.start(
-            pythonURL: URL(fileURLWithPath: info.pythonPath),
-            serverDirectory: serverDirectory)
+        guard !server.isRunning else { return }
+        await server.start(pythonURL: URL(fileURLWithPath: info.pythonPath))
     }
 }
