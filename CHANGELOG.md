@@ -6,6 +6,15 @@ Versioning: Semantic Versioning (https://semver.org/)
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-06-29
+
+### Fixed
+- YouTube title lookup now uses `requests` (certifi-backed) instead of `urllib`,
+  so it works on python.org Python for macOS, which can't verify TLS with
+  `urllib` out of the box. This was why the crawl still fell back to
+  `YouTube transcript (<id>)` even after 1.1.1. Falls back to `urllib` if
+  `requests` is unavailable.
+
 ## [1.1.1] - 2026-06-29
 
 ### Fixed

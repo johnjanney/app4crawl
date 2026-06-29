@@ -151,26 +151,23 @@ def _fetch_title(video_id: str) -> Optional[str]:
 
 def _oembed_title(watch_url: str) -> Optional[str]:
     """Title via YouTube's public oEmbed endpoint (no key)."""
-    endpoint = "https://www.youtube.com/oembed?" + urllib.parse.urlencode(
-        {"url": watch_url, "format": "json"}
+    text = _http_get_text(
+        "https://www.youtube.com/oembed",
+        params={"url": watch_url, "format": "json"},
     )
-    try:
-        request = urllib.request.Request(endpoint, headers={"User-Agent": _USER_AGENT})
-        with urllib.request.urlopen(request, timeout=10) as response:
-            data = json.load(response)
-        title = data.get("title")
-        return title.strip() if isinstance(title, str) and title.strip() else None
-    except Exception:  # noqa: BLE001 - title is best-effort
+    if not text:
         return None
+    try:
+        title = json.loads(text).get("title")
+    except (ValueError, AttributeError):
+        return None
+    return title.strip() if isinstance(title, str) and title.strip() else None
 
 
 def _page_title(watch_url: str) -> Optional[str]:
     """Fallback: scrape the watch page's ``<title>`` (minus the ' - YouTube')."""
-    try:
-        request = urllib.request.Request(watch_url, headers={"User-Agent": _USER_AGENT})
-        with urllib.request.urlopen(request, timeout=10) as response:
-            html = response.read(300_000).decode("utf-8", "replace")
-    except Exception:  # noqa: BLE001 - title is best-effort
+    html = _http_get_text(watch_url)
+    if not html:
         return None
     match = re.search(r"<title>(.*?)</title>", html, re.IGNORECASE | re.DOTALL)
     if not match:
@@ -179,6 +176,34 @@ def _page_title(watch_url: str) -> Optional[str]:
     if title.endswith(" - YouTube"):
         title = title[: -len(" - YouTube")].strip()
     return title or None
+
+
+def _http_get_text(url: str, params: Optional[dict] = None) -> Optional[str]:
+    """GET ``url`` and return the body text, or ``None`` on any failure.
+
+    Prefers ``requests`` (ships trusted CA certs via certifi) because python.org
+    Python on macOS often can't verify TLS with ``urllib`` out of the box. Falls
+    back to ``urllib`` if ``requests`` is unavailable.
+    """
+    try:
+        import requests
+
+        response = requests.get(
+            url, params=params, headers={"User-Agent": _USER_AGENT}, timeout=10
+        )
+        return response.text if response.status_code == 200 else None
+    except ImportError:
+        pass
+    except Exception:  # noqa: BLE001 - best-effort
+        return None
+
+    full_url = url if not params else url + "?" + urllib.parse.urlencode(params)
+    try:
+        request = urllib.request.Request(full_url, headers={"User-Agent": _USER_AGENT})
+        with urllib.request.urlopen(request, timeout=10) as response:
+            return response.read(300_000).decode("utf-8", "replace")
+    except Exception:  # noqa: BLE001 - best-effort
+        return None
 
 
 def _format_markdown(title: str, url: str, segments: list[dict]) -> str:

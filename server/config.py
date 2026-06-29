@@ -12,7 +12,7 @@ from pathlib import Path
 
 #: Server/application version. Must match ``CHANGELOG.md`` and the Xcode
 #: project's ``CFBundleShortVersionString`` (PROJECTBRIEF §11).
-APP_VERSION: str = "1.1.1"
+APP_VERSION: str = "1.1.2"
 
 #: Loopback host. The server binds only to ``127.0.0.1`` (PROJECTBRIEF §8).
 DEFAULT_HOST: str = "127.0.0.1"
