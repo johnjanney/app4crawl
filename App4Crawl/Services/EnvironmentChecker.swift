@@ -80,13 +80,15 @@ final class EnvironmentChecker: ObservableObject {
     private var systemPythonURL: URL?
 
     /// Python script that reports interpreter and Crawl4AI versions in one shot.
+    /// Uses package metadata rather than importing crawl4ai (which is heavy and
+    /// can be slow/noisy); this matches how the server's /health detects it.
     private static let probeScript = """
         import sys
         v = sys.version_info
         print("PY %d.%d.%d" % (v.major, v.minor, v.micro))
         try:
-            import crawl4ai
-            print("C4AI " + getattr(crawl4ai, "__version__", "unknown"))
+            import importlib.metadata as m
+            print("C4AI " + m.version("crawl4ai"))
         except Exception:
             print("C4AI -")
         """
@@ -226,20 +228,27 @@ final class EnvironmentChecker: ObservableObject {
                     onOutput: self.appendLog)
             }
 
-            // Verification (non-fatal: report but continue to re-check).
-            await MainActor.run { self.appendLog("==> Verifying installation (crawl4ai-doctor)…") }
-            _ = try? await ProcessRunner.run(
+            // Verification with crawl4ai-doctor (its exit code is authoritative).
+            appendLog("==> Verifying installation (crawl4ai-doctor)…")
+            let doctor = try? await ProcessRunner.run(
                 executableURL: AppPaths.crawl4aiDoctor,
                 arguments: [],
                 onOutput: self.appendLog)
 
-            await check()
-            if case .ready = state {
+            // Confirm via metadata as well; either signal is sufficient.
+            let probe = await probe(AppPaths.venvPython)
+            let doctorPassed = doctor?.didSucceed == true
+            if probe.crawl4aiVersion != nil || doctorPassed {
+                state = .ready(
+                    EnvironmentInfo(
+                        source: .managedVenv,
+                        pythonPath: AppPaths.venvPython.path,
+                        pythonVersion: probe.pythonVersion ?? "unknown",
+                        crawl4aiVersion: probe.crawl4aiVersion ?? "installed"))
                 appendLog("==> Done.")
-            } else if case .checking = state {
-                // check() left a non-ready state; surface it.
             } else {
-                state = .failed(message: "Installation finished but Crawl4AI could not be verified.")
+                state = .failed(
+                    message: "Installation finished but Crawl4AI could not be verified.")
             }
         } catch {
             state = .failed(message: error.localizedDescription)
